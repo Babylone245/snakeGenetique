@@ -1,6 +1,11 @@
 import numpy
 from NeuralNetwork import *
 from snake import *
+from concurrent.futures import ProcessPoolExecutor
+
+def eval_wrapper(args):
+    sol, gameParams = args
+    return eval(sol, gameParams)
 
 def eval(sol, gameParams):
     score = 0
@@ -11,7 +16,7 @@ def eval(sol, gameParams):
             game.refresh()
         score += 1000*game.score+game.steps 
     sol.score = score / (gameParams["nbGames"]* gameParams["height"] * gameParams["width"] * 1000) 
-    return sol.score
+    return sol
 
 '''
 Représente une solution avec
@@ -64,11 +69,11 @@ def optimize(taillePopulation, tailleSelection, pc, arch, gameParams, nbIteratio
             mutation(child1, mr)
             mutation(child2, mr)
             
-            eval(child1, gameParams)
-            eval(child2, gameParams)
-            
             enfants.append(child1)
             enfants.append(child2)
+
+        with ProcessPoolExecutor(max_workers=nbThreads) as executor:
+            enfants = list(executor.map(eval_wrapper, [(sol, gameParams) for sol in enfants]))
         
         population = selected_population + enfants
         
