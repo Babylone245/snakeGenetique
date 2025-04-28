@@ -8,7 +8,7 @@ import sys
 gameParams={"nbGames":10, "height":10, "width":10}
 
 #fonction d'optimisation, renvoie un réseau de neurones entrainé sur le jeu
-nn = genetic.optimize(taillePopulation=400, tailleSelection=50, pc=0.8, arch=[nbFeatures, 24, nbActions], gameParams=gameParams, nbIterations=400, nbThreads=10, scoreMax=1.0, mr = 2.0)
+nn = genetic.optimize(taillePopulation=400, tailleSelection=50, pc=0.8, arch=[nbFeatures, 24, nbActions], gameParams=gameParams, nbIterations=1000, nbThreads=10, scoreMax=1.0, mr = 2.0)
 #sauvegarde du réseau pour utilisation en inférence
 save_nn(nn, "model.txt")
 
